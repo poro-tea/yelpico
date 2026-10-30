@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Intro Aesthetic ✦</title>
+    <style>
+        /* Variables de Paletas: Claro (Kawaii) y Oscuro (Gótico) */
+        :root {
+            --bg-body: #ffeef2;
+            --bg-card: #ffffff;
+            --border: #ffccd5;
+            --text-title: #ff7597;
+            --text-main: #6c5b7b;
+            --textarea-bg: #fff5f7;
+            --btn-hover: #ffe3e8;
+            --icon-color: #ff7597;
+            --toast-bg: #ffccd5;
+            --toast-text: #ff477e;
+            --btn-toggle-bg: #ffccd5;
+            --btn-toggle-text: #ff7597;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #121214;
+            --bg-card: #1a1a1e;
+            --border: #3a1a3a;
+            --text-title: #9d4edf;
+            --text-main: #c1b3cc;
+            --textarea-bg: #141416;
+            --btn-hover: #2d163d;
+            --icon-color: #9d4edf;
+            --toast-bg: #3a1a3a;
+            --toast-text: #e0aaff;
+            --btn-toggle-bg: #3a1a3a;
+            --btn-toggle-text: #9d4edf;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Botón de alternar Modo */
+        .btn-theme {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--btn-toggle-bg);
+            color: var(--btn-toggle-text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        /* Contenedor adaptativo */
+        .contenedor {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            width: 90%;
+            max-width: 440px;
+            transition: all 0.3s ease;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--text-title);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Grupo relativo para el Textarea */
+        .input-grupo {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Área de texto expandida */
+        .input-texto {
+            width: 100%;
+            height: 280px;
+            padding: 15px 50px 15px 15px;
+            font-size: 13px;
+            font-family: monospace;
+            white-space: pre;
+            background-color: var(--textarea-bg);
+            color: var(--text-main);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            outline: none;
+            resize: none;
+            box-sizing: border-box;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+
+        .input-texto:focus {
+            border-color: var(--text-title);
+        }
+
+        /* Botón de copia flotante */
+        .btn-copiar {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .btn-copiar:hover {
+            background-color: var(--btn-hover);
+        }
+
+        /* Control dinámico de los iconos internos */
+        .btn-copiar svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: var(--icon-color);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s ease;
+        }
+
+        .icon-check {
+            display: none;
+        }
+
+        /* Estado activo al copiar */
+        .btn-copiar.copiado .icon-copy {
+            display: none;
+        }
+
+        .btn-copiar.copiado .icon-check {
+            display: block;
+            stroke: #2ec4b6; /* Verde sutil universal para el check */
+        }
+
+        /* Mensaje flotante Toast */
+        .notificacion {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--toast-bg);
+            color: var(--toast-text);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+            pointer-events: none;
+            border: 1px solid var(--border);
+        }
+
+        .notificacion.mostrar {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botón para alternar los estilos solicitados -->
+    <button class="btn-theme" id="themeToggle" onclick="cambiarModo()">Modo Gótico 🖤</button>
+
+    <div class="contenedor">
+        <h2>✨ Copia tu Plantilla ✨</h2>
+        <div class="input-grupo">
+            <!-- Textarea cargado con tu diseño de texto original -->
+            <textarea id="miInput" class="input-texto" readonly>⧣₊˚﹒✦₊ ⧣₊˚ 𓂃★ ⸝⸝ ⧣₊˚﹒✦₊ ⧣₊˚
+﹌﹌/)﹌/)﹌﹌﹌﹌﹌﹌﹌
+﹌ (｡•ㅅ•｡)〝₎₎ Mi intro!!! ✦₊ ˊ˗
+. .╭∪─∪────────── ✦ ⁺.
+. .┊ ◟﹫ Nombre : ()
+. .┊ ﹒ 𐐪 Edad : ()
+. .┊ꜝꜝ﹒Pronombres : ()
+. .┊ ⨳゛Genero : ()
+. .┊ ◟ヾ Gustos : ()
+. .┊﹒𐐪 Disgustos: ()
+. .┊ ◟﹫ Extras : ()
+. .╰───────────── ✦ ⁺.
+⧣₊˚﹒✦₊ ⧣₊˚ 𓂃★ ⸝⸝ ⧣₊˚﹒✦₊ ⧣₊˚</textarea>
+ 
+            <!-- Botón con estados alternables (Copy / Check) -->
+            <button class="btn-copiar" id="btnCopiar" onclick="copiarDesdeInput()" title="Copiar plantilla">
+                <!-- Icono de páginas (Copia) -->
+                <svg class="icon-copy" viewBox="0 0 24 24">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <!-- Icono de palomita (Check) -->
+                <svg class="icon-check" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="aviso" class="notificacion">🌸 ¡Copiado con éxito! ✨</div>
+
+    <script>
+        function copiarDesdeInput() {
+            const inputEle = document.getElementById("miInput");
+            const btnCopiar = document.getElementById("btnCopiar");
+            const aviso = document.getElementById("aviso");
+
+            navigator.clipboard.writeText(inputEle.value)
+                .then(() => {
+                    // Transición al icono de confirmación y feedback visual discreto
+                    btnCopiar.classList.add("copiado");
+                    aviso.classList.add("mostrar");
+
+                    setTimeout(() => {
+                        btnCopiar.classList.remove("copiado");
+                        aviso.classList.remove("mostrar");
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error("Error al acceder al portapapeles: ", err);
+                });
+        }
+
+        function cambiarModo() {
+            const body = document.body;
+            const btnToggle = document.getElementById("themeToggle");
+            const aviso = document.getElementById("aviso");
+
+            if (body.hasAttribute("data-theme")) {
+                body.removeAttribute("data-theme");
+                btnToggle.innerText = "Modo Gótico 🖤";
+                aviso.innerText = "🌸 ¡Copiado con éxito! ✨";
+            } else {
+                body.setAttribute("data-theme", "dark");
+                btnToggle.innerText = "Modo Kawaii 🌸";
+                aviso.innerText = "🦇 ¡Copiado a las sombras! 🖤";
+            }
+        }
+    </script>
+
+</body>
+</html>
